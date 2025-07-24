@@ -16,9 +16,7 @@ import { Link } from "react-router-dom";
 const AllProduct = () => {
   const allProducts = [...HairData, ...BodyData, ...SkinDate];
 
- 
   localStorage.setItem("Product", JSON.stringify(allProducts));
-
 
   const HandleAddedProduct = (product) => {
     let existingData = [];
@@ -62,7 +60,10 @@ const AllProduct = () => {
       {allProducts.map((item) => (
         <Grid item xs={12} sm={6} md={4} key={item.id}>
           <Card sx={{ maxWidth: 270 }}>
-            <CardActionArea component={Link} to={`/productlist/${item.category}/${item.id}`}>
+            <CardActionArea
+              component={Link}
+              to={`/productlist/${item.category}/${item.id}`}
+            >
               <CardMedia
                 component="img"
                 height="140"

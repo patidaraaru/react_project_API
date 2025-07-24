@@ -9,7 +9,6 @@ import Category from "../Category/Category";
 import ProductLimit from "../Data/ProductLimit";
 
 const Home = () => {
-
   return (
     <>
       <div style={{ minHeight: "50vh", margin: "0 auto" }}>
@@ -50,9 +49,9 @@ const Home = () => {
           ))}
         </Swiper>
       </div>
-       <Category/>
-       <ProductLimit/>
-      <Footer/>
+      <Category />
+      <ProductLimit />
+      <Footer />
     </>
   );
 };

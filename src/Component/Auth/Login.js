@@ -1,25 +1,37 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import LoginContext from "./LoginContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+   const isAuthenticated = localStorage.getItem("Token");
   const navigate = useNavigate();
-  const { login } = useContext(LoginContext);
-
-  const [email, setEmail] = useState("");
+  const { login, user } = useContext(LoginContext);
+  const [data, setData] = useState();
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const HandleSubmit = (e) => {
-    e.preventDefault();
-    const success = login({ email, password });
-    if (success) {
-      navigate("/");
-    } else {
-      setError("Error");
+  useEffect(() => {
+    const storedUserData = localStorage.getItem("userDatass");
+    if (storedUserData) {
+      setData(JSON.parse(storedUserData));
     }
-    
+  }, []);
+
+
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+    const loggedInUser = await login({ username, password });
+    console.log("Logged in user:", loggedInUser);
+    if (loggedInUser?.token) {
+      alert("Login successful");
+      navigate("/");
+    }
+    else{
+      alert("Login failed. Please check your credentials.");
+    }
   };
 
   return (
@@ -40,13 +52,13 @@ const Login = () => {
 
         <form onSubmit={HandleSubmit}>
           <TextField
-            label="Email"
+            label="username"
             variant="outlined"
             fullWidth
             margin="normal"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
             InputProps={{}}
           />
@@ -71,6 +83,9 @@ const Login = () => {
           >
             Log In
           </Button>
+
+          <Link to="/register">Don't have an account? Register</Link>
+          
         </form>
       </Box>
       {error && <p style={{ color: "red" }}>{error}</p>}

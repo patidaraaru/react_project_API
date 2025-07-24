@@ -7,11 +7,16 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import productImg from "../../img/img1.jpg";
+import WishListContext from "../WishList/WishListContext";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const CategoryAll = () => {
+  const { wishlist, addToWishList, removeToWishList } =
+    useContext(WishListContext);
   const { id } = useParams();
   const [categorys, setCategory] = useState([]);
   const [error, setError] = useState();
@@ -47,34 +52,53 @@ const CategoryAll = () => {
         Category: {id}
       </Typography>
       <Grid container spacing={3} sx={{ paddingTop: "50px" }}>
-        {categorys.map((item) => (
-          <Link to={`/product/${item.id}`} style={{ textDecoration: "none" }}>
+        {categorys.map((item) => {
+          const isListed = wishlist.some((wishItem) => wishItem.id === item.id);
+
+          return (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
               <Card sx={{ maxWidth: 240 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image={item.image || productImg}
-                    alt={item.title}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5">
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {item.description}
-                    </Typography>
-                    <Typography variant="h6">${item.price}</Typography>
-                    <Typography variant="body2">
-                      ⭐ {item.rating?.rate} ({item.rating?.count} reviews)
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
+                <Link
+                  to={`/product/${item.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image={item.image || productImg}
+                      alt={item.title}
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5">
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {item.description}
+                      </Typography>
+                      <Typography variant="h6">${item.price}</Typography>
+                      <Typography variant="body2">
+                        ⭐ {item.rating?.rate} ({item.rating?.count} reviews)
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Link>
+                <button
+                  onClick={() =>
+                    isListed ? removeToWishList(item.id) : addToWishList(item)
+                  }
+                  style={{ marginTop: "10px" }}
+                >
+                  {isListed ? (
+                    <FavoriteIcon sx={{ color: "#e91e63" }} />
+                  ) : (
+                    <FavoriteBorderIcon sx={{ color: "#e91e63" }} />
+                  )}
+                </button>
               </Card>
             </Grid>
-          </Link>
-        ))}
+          );
+        })}
       </Grid>
     </Container>
   );

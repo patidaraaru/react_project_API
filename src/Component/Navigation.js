@@ -1,9 +1,11 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import LoginContext from "./Auth/LoginContext";
 
 const Navigation = () => {
-  const { logout, user } = useContext(LoginContext);
+ const navigate = useNavigate();
+  const { logout } = useContext(LoginContext);
+   const isAuthenticated = localStorage.getItem("Token");
   return (
     <div>
       <header className="header">
@@ -30,7 +32,7 @@ const Navigation = () => {
           <NavLink to="/category" className="nav-link">
             Category
           </NavLink>
-          {user ? (
+          {isAuthenticated ? (
             <button onClick={logout}>Logout</button>
           ) : (
             <NavLink to="/login" className="nav-link">
